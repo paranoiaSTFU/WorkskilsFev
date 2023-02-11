@@ -1,0 +1,32 @@
+﻿<Window x:Class="Урок4.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Урок4"
+        mc:Ignorable="d"
+        Title="Урок4" Height="450" Width="800" MinHeight="450" MinWidth="800">
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="#FFF12F6D"/>
+            <Setter Property="HorizontalAlignment" Value="center"/>
+            <Setter Property="VerticalAlignment" Value="center"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontFamily" Value="Inkulinati 210706"/>
+            <Setter Property="Width" Value="150"/>
+            <Setter Property="Margin" Value="15"/>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="75"/>
+            <RowDefinition Height="*"/>
+
+        </Grid.RowDefinitions>
+        <Image Source="res/Ico.png" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+        <TextBlock Name="Title" Grid.Row="0" HorizontalAlignment="Center"  VerticalAlignment="Center" Text="{Binding ElementName=MainFrame, Path=Content.Title}"/>
+        <Button Name="BtnBack" Content="Back" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center" Click="BtnBack_Click" />
+        <Frame Name="MainFrame" NavigationUIVisibility="Hidden" Grid.Row="1" ContentRendered="MainFrame_ContentRendered"/>
+
+    </Grid>
+</Window>
