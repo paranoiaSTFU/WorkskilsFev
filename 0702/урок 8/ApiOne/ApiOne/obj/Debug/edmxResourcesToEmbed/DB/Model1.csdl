@@ -1,0 +1,191 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="isp4119Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
+    <FunctionImport Name="sp_alterdiagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+      <Parameter Name="version" Mode="In" Type="Int32" />
+      <Parameter Name="definition" Mode="In" Type="Binary" />
+    </FunctionImport>
+    <FunctionImport Name="sp_creatediagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+      <Parameter Name="version" Mode="In" Type="Int32" />
+      <Parameter Name="definition" Mode="In" Type="Binary" />
+    </FunctionImport>
+    <FunctionImport Name="sp_dropdiagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_helpdiagramdefinition" ReturnType="Collection(isp4119Model.sp_helpdiagramdefinition_Result)">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_helpdiagrams" ReturnType="Collection(isp4119Model.sp_helpdiagrams_Result)">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_renamediagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+      <Parameter Name="new_diagramname" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="sp_upgraddiagrams" />
+    <EntitySet Name="Countries" EntityType="isp4119Model.Country" />
+    <EntitySet Name="Hotels" EntityType="isp4119Model.Hotel" />
+    <EntitySet Name="HotelComments" EntityType="isp4119Model.HotelComment" />
+    <EntitySet Name="Hotelimages" EntityType="isp4119Model.Hotelimage" />
+    <EntitySet Name="sysdiagrams" EntityType="isp4119Model.sysdiagram" />
+    <EntitySet Name="Tours" EntityType="isp4119Model.Tour" />
+    <EntitySet Name="Types" EntityType="isp4119Model.Type" />
+    <AssociationSet Name="FK_Hotel_Country" Association="isp4119Model.FK_Hotel_Country">
+      <End Role="Country" EntitySet="Countries" />
+      <End Role="Hotel" EntitySet="Hotels" />
+    </AssociationSet>
+    <AssociationSet Name="FK_HotelComment_Hotel" Association="isp4119Model.FK_HotelComment_Hotel">
+      <End Role="Hotel" EntitySet="Hotels" />
+      <End Role="HotelComment" EntitySet="HotelComments" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Hotelimage_Hotel" Association="isp4119Model.FK_Hotelimage_Hotel">
+      <End Role="Hotel" EntitySet="Hotels" />
+      <End Role="Hotelimage" EntitySet="Hotelimages" />
+    </AssociationSet>
+    <AssociationSet Name="HotelOfTour" Association="isp4119Model.HotelOfTour">
+      <End Role="Hotel" EntitySet="Hotels" />
+      <End Role="Tour" EntitySet="Tours" />
+    </AssociationSet>
+    <AssociationSet Name="TypeOfTour" Association="isp4119Model.TypeOfTour">
+      <End Role="Tour" EntitySet="Tours" />
+      <End Role="Type" EntitySet="Types" />
+    </AssociationSet>
+  </EntityContainer>
+  <ComplexType Name="sp_helpdiagramdefinition_Result">
+    <Property Type="Int32" Name="version" Nullable="true" />
+    <Property Type="Binary" Name="definition" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="sp_helpdiagrams_Result">
+    <Property Type="String" Name="Database" Nullable="true" MaxLength="128" />
+    <Property Type="String" Name="Name" Nullable="false" MaxLength="128" />
+    <Property Type="Int32" Name="ID" Nullable="false" />
+    <Property Type="String" Name="Owner" Nullable="true" MaxLength="128" />
+    <Property Type="Int32" Name="OwnerID" Nullable="false" />
+  </ComplexType>
+  <EntityType Name="Country">
+    <Key>
+      <PropertyRef Name="Code" />
+    </Key>
+    <Property Name="Code" Type="String" Nullable="false" MaxLength="2" FixedLength="false" Unicode="true" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Hotels" Relationship="isp4119Model.FK_Hotel_Country" FromRole="Country" ToRole="Hotel" />
+  </EntityType>
+  <EntityType Name="Hotel">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="CountOfStars" Type="Int32" Nullable="false" />
+    <Property Name="CountryCode" Type="String" Nullable="false" MaxLength="2" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Country" Relationship="isp4119Model.FK_Hotel_Country" FromRole="Hotel" ToRole="Country" />
+    <NavigationProperty Name="HotelComments" Relationship="isp4119Model.FK_HotelComment_Hotel" FromRole="Hotel" ToRole="HotelComment" />
+    <NavigationProperty Name="Hotelimages" Relationship="isp4119Model.FK_Hotelimage_Hotel" FromRole="Hotel" ToRole="Hotelimage" />
+    <NavigationProperty Name="Tours" Relationship="isp4119Model.HotelOfTour" FromRole="Hotel" ToRole="Tour" />
+  </EntityType>
+  <EntityType Name="HotelComment">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Hotelid" Type="Int32" Nullable="false" />
+    <Property Name="Text" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Author" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="CreationDate" Type="DateTime" Nullable="false" Precision="0" />
+    <NavigationProperty Name="Hotel" Relationship="isp4119Model.FK_HotelComment_Hotel" FromRole="HotelComment" ToRole="Hotel" />
+  </EntityType>
+  <EntityType Name="Hotelimage">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Hotelid" Type="Int32" Nullable="false" />
+    <Property Name="ImageSource" Type="Binary" Nullable="false" MaxLength="Max" FixedLength="false" />
+    <NavigationProperty Name="Hotel" Relationship="isp4119Model.FK_Hotelimage_Hotel" FromRole="Hotelimage" ToRole="Hotel" />
+  </EntityType>
+  <EntityType Name="sysdiagram">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Tour">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="TicketCount" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Description" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="ImagePreview" Type="Binary" MaxLength="Max" FixedLength="false" />
+    <Property Name="Price" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+    <Property Name="isActual" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="Hotels" Relationship="isp4119Model.HotelOfTour" FromRole="Tour" ToRole="Hotel" />
+    <NavigationProperty Name="Types" Relationship="isp4119Model.TypeOfTour" FromRole="Tour" ToRole="Type" />
+  </EntityType>
+  <EntityType Name="Type">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Description" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <NavigationProperty Name="Tours" Relationship="isp4119Model.TypeOfTour" FromRole="Type" ToRole="Tour" />
+  </EntityType>
+  <Association Name="FK_Hotel_Country">
+    <End Type="isp4119Model.Country" Role="Country" Multiplicity="1" />
+    <End Type="isp4119Model.Hotel" Role="Hotel" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Country">
+        <PropertyRef Name="Code" />
+      </Principal>
+      <Dependent Role="Hotel">
+        <PropertyRef Name="CountryCode" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_HotelComment_Hotel">
+    <End Type="isp4119Model.Hotel" Role="Hotel" Multiplicity="1" />
+    <End Type="isp4119Model.HotelComment" Role="HotelComment" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Hotel">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="HotelComment">
+        <PropertyRef Name="Hotelid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Hotelimage_Hotel">
+    <End Type="isp4119Model.Hotel" Role="Hotel" Multiplicity="1" />
+    <End Type="isp4119Model.Hotelimage" Role="Hotelimage" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Hotel">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Hotelimage">
+        <PropertyRef Name="Hotelid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="HotelOfTour">
+    <End Type="isp4119Model.Hotel" Role="Hotel" Multiplicity="*" />
+    <End Type="isp4119Model.Tour" Role="Tour" Multiplicity="*" />
+  </Association>
+  <Association Name="TypeOfTour">
+    <End Type="isp4119Model.Tour" Role="Tour" Multiplicity="*" />
+    <End Type="isp4119Model.Type" Role="Type" Multiplicity="*" />
+  </Association>
+</Schema>
